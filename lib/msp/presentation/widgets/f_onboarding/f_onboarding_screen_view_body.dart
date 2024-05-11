@@ -19,7 +19,7 @@ class _FOnboardingViewBodyState extends State<FOnboardingViewBody> {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
               Align(
@@ -39,7 +39,7 @@ class _FOnboardingViewBodyState extends State<FOnboardingViewBody> {
               ),
               Center(
                   child: SizedBox(
-                height: ScreenSize.height(context) * 0.8,
+                height: ScreenSize.height(context) * 0.5,
                 width: ScreenSize.width(context) * 0.6,
                 child: Image.asset(
                   AssetsData.samsung,

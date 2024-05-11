@@ -1,13 +1,21 @@
+import 'dart:html';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:msp_app/msp/presentation/pages/f_onboarding_screen_view.dart';
 import 'package:msp_app/msp/presentation/pages/s_onboarding_screen_view.dart';
 import 'package:msp_app/msp/presentation/pages/splash_screen_view.dart';
 import 'package:msp_app/msp/presentation/pages/t_onboarding_screen_view.dart';
 import 'package:msp_app/msp/presentation/widgets/customization/bottom_sheet_customization.dart';
 import 'package:msp_app/msp/presentation/widgets/customization/button_customization.dart';
+import 'package:msp_app/msp/presentation/widgets/f_onboarding/f_onboarding_screen_view_body.dart';
+import 'package:msp_app/msp/presentation/widgets/s_onboarding/s_onboarding_screen_view_body.dart';
+import 'package:msp_app/msp/presentation/widgets/t_onboarding/t_onboarding_screen_view_body.dart';
 import 'package:msp_app/utils/constants/color_assets.dart';
 import 'package:msp_app/utils/constants/font_asset.dart';
 import 'package:msp_app/utils/constants/screen_size.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MainOnboardingViewBody extends StatefulWidget {
   const MainOnboardingViewBody({super.key});
@@ -22,13 +30,22 @@ class _MainOnboardingViewBodyState extends State<MainOnboardingViewBody> {
       duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
   void _onNextBottomSheet() => _bottomSheetController.nextPage(
       duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
-
+  void _onBack() => _controller.previousPage(
+      duration: const Duration(microseconds: 200), curve: Curves.linear);
+  void _onBackBottomSheet() => _bottomSheetController.previousPage(
+      duration: const Duration(microseconds: 200), curve: Curves.linear);
   void _onSkip() => Navigator.push(
       context, MaterialPageRoute(builder: (context) => SplashScreenView()));
   void _handlePageChange() {
     setState(() {
       _currentPage = _controller.page?.round() ?? 0;
     });
+  }
+
+  @override
+  void initState() {
+    _controller.addListener(_handlePageChange);
+    super.initState();
   }
 
   final _bottomSheetController = PageController();
@@ -43,100 +60,8 @@ class _MainOnboardingViewBodyState extends State<MainOnboardingViewBody> {
     'At the heart of our success lies our dedicated team of professionals, each driven by a shared vision to create a more sustainable world',
     'Journey thousand miles begins with one stepTake this step with us. Apply for MSP and start a new journey full of valuable information and skills that you will not find anywhere else.'
   ];
-  @override
-  void initState() {
-    _controller.addListener(_handlePageChange);
-    Future.delayed(const Duration(seconds: 0)).then((_) {
-      showModalBottomSheet(
-          isScrollControlled: true,
-          context: context,
-          builder: (builder) {
-            return SizedBox(
-              height: ScreenSize.height(context) * 0.5,
-              width: ScreenSize.width(context),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: ScreenSize.height(context) * 0.4,
-                    width: ScreenSize.width(context),
-                    child: PageView.builder(
-                      controller: _bottomSheetController,
-                      itemCount: onBoarding.length,
-                      itemBuilder: (_, index) => Column(
-                        children: [
-                          BottomSheetCustomization(
-                              controller: _bottomSheetController,
-                              fText: fTextList[index],
-                              sText: sTextList[index],
-                              description: descTextList[index]),
-                          SizedBox(
-                            height: ScreenSize.height(context) * 0.05,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 18.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ButtonCustomization(
-                                    buttonHeight: 0.05,
-                                    buttonWidth: 0.3,
-                                    onPressed: () {
-                                      _onSkip();
-                                    },
-                                    text: 'Skip',
-                                    style: FontAsset.medium16
-                                        .copyWith(color: ColorAssets.mainColor),
-                                    backgroundColor: Colors.white,
-                                    borderCircular: 5,
-                                    borderColor: ColorAssets.mainColor,
-                                    borderSideWidth: 0),
-                                SizedBox(
-                                  width: ScreenSize.width(context) * 0.1,
-                                ),
-                                ButtonCustomization(
-                                    buttonHeight: 0.05,
-                                    buttonWidth: 0.3,
-                                    onPressed: () {
-                                      _currentPage == onBoarding.length - 1
-                                          ? Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SplashScreenView()))
-                                          : _onNext();
-                                      _onNextBottomSheet();
-                                    },
-                                    text: 'Next',
-                                    style: FontAsset.medium16
-                                        .copyWith(color: Colors.white),
-                                    backgroundColor: ColorAssets.mainColor,
-                                    borderCircular: 5,
-                                    borderColor: ColorAssets.mainColor,
-                                    borderSideWidth: 0)
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          });
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _controller.removeListener(_handlePageChange);
-  }
 
   final _controller = PageController();
-
   List onBoarding = const [
     FOnboardingView(),
     SOnboardingView(),
@@ -144,24 +69,204 @@ class _MainOnboardingViewBodyState extends State<MainOnboardingViewBody> {
   ];
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: ScreenSize.height(context),
-            width: ScreenSize.width(context),
-            child: PageView.builder(
-              controller: _controller,
-              itemCount: onBoarding.length,
-              itemBuilder: (_, index) {
-                return onBoarding[index];
-              },
-            ),
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              SizedBox(
+                height: ScreenSize.height(context) * 0.6,
+                width: ScreenSize.width(context),
+                child: Stack(
+                  children: [
+                    PageView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: onBoarding.length,
+                      controller: _controller,
+                      itemBuilder: (context, index) {
+                        return onBoarding[index];
+                      },
+                    ),
+                    Positioned(
+                      top: ScreenSize.height(context) * 0.565,
+                      child: Container(
+                        width: ScreenSize.width(context),
+                        height: ScreenSize.height(context) * 0.002,
+                        decoration: const ShapeDecoration(
+                          color: Color(0xFF92929D),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(2),
+                              bottomRight: Radius.circular(2),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: ScreenSize.height(context) * 0.5,
+                      width: ScreenSize.width(context),
+                      child: PageView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: _bottomSheetController,
+                        itemCount: 3,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: fTextList[index],
+                                      style: const TextStyle(
+                                        color: Color(0xFF030303),
+                                        fontSize: 24,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: sTextList[index],
+                                      style: TextStyle(
+                                        color: ColorAssets.mainColor,
+                                        fontSize: 24,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: ScreenSize.height(context) * 0.02,
+                              ),
+                              Text(
+                                descTextList[index],
+                                style: FontAsset.medium14
+                                    .copyWith(color: Colors.grey),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                height: ScreenSize.height(context) * 0.02,
+                              ),
+                              SmoothPageIndicator(
+                                controller: _controller,
+                                count: 3,
+                                effect: ExpandingDotsEffect(
+                                    activeDotColor: ColorAssets.mainColor,
+                                    dotColor:
+                                        ColorAssets.mainColor.withOpacity(0.5),
+                                    dotHeight:
+                                        ScreenSize.height(context) * 0.02,
+                                    dotWidth: ScreenSize.width(context) * 0.04),
+                              ),
+                              SizedBox(
+                                height: ScreenSize.height(context) * 0.04,
+                              ),
+                              _currentPage == 0
+                                  ? ButtonCustomization(
+                                      onPressed: () {
+                                        _onNext();
+                                        _onNextBottomSheet();
+                                      },
+                                      text: 'Next',
+                                      style: FontAsset.medium16
+                                          .copyWith(color: Colors.white),
+                                      backgroundColor: ColorAssets.mainColor,
+                                      borderCircular: 8,
+                                      borderColor: ColorAssets.mainColor,
+                                      borderSideWidth: 1,
+                                      buttonHeight: 0.07,
+                                      buttonWidth: 0.8)
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ButtonCustomization(
+                                            onPressed: () {
+                                              if (_currentPage == 0) {
+                                                _onSkip();
+                                              } else {
+                                                _onBack();
+                                                _onBackBottomSheet();
+                                              }
+                                            },
+                                            text: _currentPage == 0
+                                                ? 'skip'
+                                                : 'Back',
+                                            style: FontAsset.medium16.copyWith(
+                                                color: ColorAssets.mainColor),
+                                            backgroundColor: Colors.white,
+                                            borderCircular: 8,
+                                            borderColor: ColorAssets.mainColor,
+                                            borderSideWidth: 1,
+                                            buttonHeight: 0.07,
+                                            buttonWidth: 0.4),
+                                        SizedBox(
+                                          width:
+                                              ScreenSize.width(context) * 0.05,
+                                        ),
+                                        ButtonCustomization(
+                                            onPressed: () {
+                                              _currentPage ==
+                                                      onBoarding.length - 1
+                                                  ? Navigator.push(context,
+                                                      page_route_animate())
+                                                  : _onNext();
+                                              _onNextBottomSheet();
+                                            },
+                                            text: 'Next',
+                                            style: FontAsset.medium16
+                                                .copyWith(color: Colors.white),
+                                            backgroundColor:
+                                                ColorAssets.mainColor,
+                                            borderCircular: 8,
+                                            borderColor: ColorAssets.mainColor,
+                                            borderSideWidth: 1,
+                                            buttonHeight: 0.07,
+                                            buttonWidth: 0.4),
+                                      ],
+                                    )
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
+  }
+
+  PageRouteBuilder<dynamic> page_route_animate() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            SplashScreenView(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(1.0, 0.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
   }
 }

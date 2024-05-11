@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:msp_app/msp/presentation/pages/splash_screen_view.dart';
 import 'package:msp_app/utils/constants/assets_data.dart';
 import 'package:msp_app/utils/constants/color_assets.dart';
 import 'package:msp_app/utils/constants/font_asset.dart';
@@ -17,13 +18,18 @@ class _SOnboardindViewBodyState extends State<SOnboardindViewBody> {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SplashScreenView()));
+                  },
                   child: Text(
                     'Skip',
                     style: FontAsset.medium14.copyWith(
@@ -37,7 +43,7 @@ class _SOnboardindViewBodyState extends State<SOnboardindViewBody> {
               ),
               Center(
                   child: SizedBox(
-                height: ScreenSize.height(context) * 0.8,
+                height: ScreenSize.height(context) * 0.5,
                 width: ScreenSize.width(context) * 0.6,
                 child: Image.asset(
                   AssetsData.ourTeam,
