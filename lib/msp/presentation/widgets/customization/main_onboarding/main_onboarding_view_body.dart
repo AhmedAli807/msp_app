@@ -1,17 +1,11 @@
-import 'dart:html';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:msp_app/msp/presentation/pages/f_onboarding_screen_view.dart';
 import 'package:msp_app/msp/presentation/pages/s_onboarding_screen_view.dart';
 import 'package:msp_app/msp/presentation/pages/splash_screen_view.dart';
 import 'package:msp_app/msp/presentation/pages/t_onboarding_screen_view.dart';
-import 'package:msp_app/msp/presentation/widgets/customization/bottom_sheet_customization.dart';
 import 'package:msp_app/msp/presentation/widgets/customization/button_customization.dart';
-import 'package:msp_app/msp/presentation/widgets/f_onboarding/f_onboarding_screen_view_body.dart';
-import 'package:msp_app/msp/presentation/widgets/s_onboarding/s_onboarding_screen_view_body.dart';
-import 'package:msp_app/msp/presentation/widgets/t_onboarding/t_onboarding_screen_view_body.dart';
+import 'package:msp_app/msp/presentation/widgets/customization/main_onboarding/line.dart';
+import 'package:msp_app/msp/presentation/widgets/customization/main_onboarding/mockup_page_view.dart';
 import 'package:msp_app/utils/constants/color_assets.dart';
 import 'package:msp_app/utils/constants/font_asset.dart';
 import 'package:msp_app/utils/constants/screen_size.dart';
@@ -26,21 +20,6 @@ class MainOnboardingViewBody extends StatefulWidget {
 
 class _MainOnboardingViewBodyState extends State<MainOnboardingViewBody> {
   int _currentPage = 0;
-  void _onNext() => _controller.nextPage(
-      duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
-  void _onNextBottomSheet() => _bottomSheetController.nextPage(
-      duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
-  void _onBack() => _controller.previousPage(
-      duration: const Duration(microseconds: 200), curve: Curves.linear);
-  void _onBackBottomSheet() => _bottomSheetController.previousPage(
-      duration: const Duration(microseconds: 200), curve: Curves.linear);
-  void _onSkip() => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => SplashScreenView()));
-  void _handlePageChange() {
-    setState(() {
-      _currentPage = _controller.page?.round() ?? 0;
-    });
-  }
 
   @override
   void initState() {
@@ -80,29 +59,11 @@ class _MainOnboardingViewBodyState extends State<MainOnboardingViewBody> {
                 width: ScreenSize.width(context),
                 child: Stack(
                   children: [
-                    PageView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: onBoarding.length,
-                      controller: _controller,
-                      itemBuilder: (context, index) {
-                        return onBoarding[index];
-                      },
-                    ),
+                    MockupPageView(
+                        onBoarding: onBoarding, controller: _controller),
                     Positioned(
                       top: ScreenSize.height(context) * 0.565,
-                      child: Container(
-                        width: ScreenSize.width(context),
-                        height: ScreenSize.height(context) * 0.002,
-                        decoration: const ShapeDecoration(
-                          color: Color(0xFF92929D),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(2),
-                              bottomRight: Radius.circular(2),
-                            ),
-                          ),
-                        ),
-                      ),
+                      child: const Line(),
                     ),
                   ],
                 ),
@@ -251,10 +212,26 @@ class _MainOnboardingViewBodyState extends State<MainOnboardingViewBody> {
     );
   }
 
+  void _onNext() => _controller.nextPage(
+      duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
+  void _onNextBottomSheet() => _bottomSheetController.nextPage(
+      duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
+  void _onBack() => _controller.previousPage(
+      duration: const Duration(microseconds: 200), curve: Curves.linear);
+  void _onBackBottomSheet() => _bottomSheetController.previousPage(
+      duration: const Duration(microseconds: 200), curve: Curves.linear);
+  void _onSkip() => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => SplashScreenView()));
+  void _handlePageChange() {
+    setState(() {
+      _currentPage = _controller.page?.round() ?? 0;
+    });
+  }
+
   PageRouteBuilder<dynamic> page_route_animate() {
     return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            SplashScreenView(),
+            const SplashScreenView(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var begin = Offset(1.0, 0.0);
           var end = Offset.zero;

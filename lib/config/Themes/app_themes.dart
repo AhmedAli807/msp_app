@@ -11,7 +11,7 @@ ThemeData appTheme() {
       brightness: Brightness.light,
       appBarTheme: AppBarTheme(
           centerTitle: true,
-          color: ColorAssets.mainColor,
+          // color: ColorAssets.mainColor,
           elevation: 0,
           titleTextStyle: const TextStyle(
               color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)));

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:msp_app/config/Route/routes.dart';
 import 'package:msp_app/config/Themes/app_themes.dart';
 import 'package:msp_app/msp/presentation/pages/f_onboarding_screen_view.dart';
+import 'package:msp_app/msp/presentation/pages/home_view.dart';
 import 'package:msp_app/msp/presentation/pages/main_on_boarding_view.dart';
 import 'package:msp_app/msp/presentation/pages/splash_screen_view.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const MainOnboardingView(),
+      home: const HomeView(),
       theme: appTheme(),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:msp_app/msp/presentation/pages/splash_screen_view.dart';
 import 'package:msp_app/utils/constants/assets_data.dart';
 import 'package:msp_app/utils/constants/color_assets.dart';
 import 'package:msp_app/utils/constants/font_asset.dart';
@@ -23,7 +24,12 @@ class _TOnboardingViewBodyState extends State<TOnboardingViewBody> {
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SplashScreenView()));
+                  },
                   child: Text(
                     'Skip',
                     style: FontAsset.medium14.copyWith(

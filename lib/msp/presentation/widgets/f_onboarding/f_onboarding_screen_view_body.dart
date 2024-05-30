@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:msp_app/msp/presentation/pages/splash_screen_view.dart';
 import 'package:msp_app/msp/presentation/widgets/customization/bottom_sheet_customization.dart';
 import 'package:msp_app/utils/constants/assets_data.dart';
 import 'package:msp_app/utils/constants/color_assets.dart';
@@ -25,7 +26,12 @@ class _FOnboardingViewBodyState extends State<FOnboardingViewBody> {
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SplashScreenView()));
+                  },
                   child: Text(
                     'Skip',
                     style: FontAsset.medium14.copyWith(
