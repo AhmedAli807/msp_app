@@ -12,4 +12,8 @@ class AssetsData {
   static String hrCategory = 'assets/images/HR_category.png';
   static String others = 'assets/images/others.png';
   static String marketingCategory = 'assets/images/marketing_category.png';
+  static String person = 'assets/images/ben_ali_test.png';
+  static String facebook = 'assets/images/facebook.svg';
+  static String twitter = 'assets/images/twitter.svg';
+  static String linkedin = 'assets/images/linkedin.svg';
 }
